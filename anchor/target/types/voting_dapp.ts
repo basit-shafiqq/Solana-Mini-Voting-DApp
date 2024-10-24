@@ -7,157 +7,91 @@
 export type VotingDapp = {
   "address": "AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ",
   "metadata": {
-    "name": "voting_dapp",
+    "name": "votingDapp",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "intializePoll",
       "discriminator": [
-        98,
-        165,
+        200,
+        103,
+        124,
         201,
-        177,
-        108,
-        65,
-        206,
-        96
+        157,
+        62,
+        172,
+        145
       ],
       "accounts": [
         {
-          "name": "payer",
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "voting_dapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "voting_dapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "voting_dapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
+          "name": "poll",
           "writable": true,
-          "signer": true
-        },
-        {
-          "name": "voting_dapp",
-          "writable": true,
-          "signer": true
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pollId"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
-    },
-    {
-      "name": "set",
-      "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
-      ],
-      "accounts": [
-        {
-          "name": "voting_dapp",
-          "writable": true
-        }
-      ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "pollId",
+          "type": "u64"
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "voting_dapp",
+      "name": "poll",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
+        110,
+        234,
+        167,
         188,
-        253,
-        124,
-        25
+        231,
+        136,
+        153,
+        111
       ]
     }
   ],
   "types": [
     {
-      "name": "voting_dapp",
+      "name": "poll",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u8"
+            "name": "pollId",
+            "type": "u64"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "pollStart",
+            "type": "u64"
+          },
+          {
+            "name": "pollEnd",
+            "type": "u64"
           }
         ]
       }
