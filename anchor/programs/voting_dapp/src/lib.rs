@@ -27,8 +27,11 @@ pub mod voting_dapp {
     pub fn intialize_candidate(
         context: Context<InitializeCandidate>,
         candidate_name: String,
-        poll_id: u64
+        _poll_id: u64
     ) -> Result<()> {
+        let candidate = &mut context.accounts.candidate;
+        candidate.candidate_name = candidate_name;
+        candidate.candidate_amount = 0;
         Ok(())
     }
 }
