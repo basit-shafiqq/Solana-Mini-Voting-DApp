@@ -14,6 +14,62 @@ export type VotingDapp = {
   },
   "instructions": [
     {
+      "name": "initializeVote",
+      "discriminator": [
+        71,
+        196,
+        78,
+        199,
+        191,
+        162,
+        80,
+        238
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "poll",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pollId"
+              }
+            ]
+          }
+        },
+        {
+          "name": "candidate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pollId"
+              },
+              {
+                "kind": "arg",
+                "path": "candidateName"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "candidateName",
+          "type": "string"
+        },
+        {
+          "name": "pollId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "intializeCandidate",
       "discriminator": [
         26,
@@ -33,6 +89,7 @@ export type VotingDapp = {
         },
         {
           "name": "poll",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -168,7 +225,7 @@ export type VotingDapp = {
             "type": "string"
           },
           {
-            "name": "candidateAmount",
+            "name": "candidateVotes",
             "type": "u64"
           }
         ]

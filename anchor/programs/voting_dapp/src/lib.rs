@@ -30,12 +30,40 @@ pub mod voting_dapp {
         _poll_id: u64
     ) -> Result<()> {
         let candidate = &mut context.accounts.candidate;
+        let poll = &mut context.accounts.poll;
+        poll.candidate_amount += 1;
+
         candidate.candidate_name = candidate_name;
-        candidate.candidate_amount = 0;
+        candidate.candidate_votes = 0;
+
+        Ok(())
+    }
+
+    pub fn initialize_vote(
+        context: Context<InitializeVote>,
+        _candidate_name: String,
+        _poll_id: u64
+    ) -> Result<()> {
+        let candidate = &mut context.accounts.candidate;
+        candidate.candidate_votes += 1;
         Ok(())
     }
 }
 
+#[derive(Accounts)]
+#[instruction(candidate_name:String,poll_id:u64)]
+pub struct InitializeVote<'info> {
+    pub signer: Signer<'info>,
+    #[account(seeds = [poll_id.to_le_bytes().as_ref()], bump)]
+    pub poll: Account<'info, Poll>,
+
+    #[account(
+        mut,
+        seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes()],
+        bump
+    )]
+    pub candidate: Account<'info, Candidate>,
+}
 
 #[derive(Accounts)]
 #[instruction(poll_id:u64)]
@@ -53,7 +81,6 @@ pub struct InitializePoll<'info> {
     pub system_program: Program<'info, System>,
 }
 
-
 #[account]
 #[derive(InitSpace)]
 pub struct Poll {
@@ -70,25 +97,24 @@ pub struct Poll {
 pub struct InitializeCandidate<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
-    #[account(seeds = [poll_id.to_le_bytes().as_ref()], bump)]
+    #[account(mut,seeds = [poll_id.to_le_bytes().as_ref()], bump)]
     pub poll: Account<'info, Poll>,
 
     #[account(
         init,
         payer = signer,
         space = 8 + Poll::INIT_SPACE,
-        seeds = [poll_id.to_le_bytes().as_ref(),candidate_name.as_bytes()],
+        seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes()],
         bump
     )]
     pub candidate: Account<'info, Candidate>,
     pub system_program: Program<'info, System>,
 }
 
-
 #[account]
 #[derive(InitSpace)]
-pub struct Candidate{
-  #[max_len(20)]
-  pub candidate_name:String,
-  pub candidate_amount:u64,
+pub struct Candidate {
+    #[max_len(20)]
+    pub candidate_name: String,
+    pub candidate_votes: u64,
 }
