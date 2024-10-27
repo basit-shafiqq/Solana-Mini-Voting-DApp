@@ -40,10 +40,33 @@ describe('voting_dapp', () => {
   }, 10000);
 
   it('Initialize Candidate', async () => {
-    // Implement test logic for initializing a candidate
+   
+    await votingProgram.methods.intializeCandidate(
+      "Crunchy",
+      new anchor.BN(1)
+    ).rpc();
+
+    await votingProgram.methods.intializeCandidate(
+      "Smooth",
+      new anchor.BN(1)
+    ).rpc();
+
+    const [crunchyAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer,'le',8),Buffer.from("Crunchy")],
+      votingAddress
+    );
+    const crunchyCandidate = await votingProgram.account.candidate.fetch(crunchyAddress);
+    console.log(crunchyCandidate);
+
+    const [smoothAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer,'le',8),Buffer.from("Smooth")],
+      votingAddress
+    );
+    const smoothCandidate = await votingProgram.account.candidate.fetch(smoothAddress);
+    console.log(crunchyCandidate);
   });
 
   it('Vote', async () => {
-    // Implement test logic for voting
+    
   });
 });
